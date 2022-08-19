@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+
+<head>
+    <title>Lights</title>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=swap" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=swap">
+    </noscript>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main>
+        <section class="screen" id="loading"></section>
+        <section class="screen" id="noAuth"></section>
+        <section class="screen" id="app">
+            <h1 id="locationTitle"></h1>
+            <div class="group-section">
+                <div class="group-switch">
+                    <label>
+                        <span data-name>Master Bedroom</span>
+                        <input type="checkbox" class="switch">
+                    </label>
+                </div>
+                <div class="light-group">
+                    <div class="light-switch">
+                        <label>
+                            <span data-name>Master Bedroom 1</span>
+                            <input type="checkbox" class="switch">
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="screen" id="desktop"></section>
+    </main>
+
+    <script src="index.js"></script>
+
+</body>
+
+</html>
