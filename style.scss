@@ -71,7 +71,7 @@ input[type=checkbox].switch {
 	background-image: url(/assets/icons/white-circle.svg);
 	background-position-x: var(--pill-offset);
 	&:checked {
-		background-color: #14919B;
+		background-color: #2CB1BC;
 		background-position-x: calc(100% - var(--pill-offset));
 	}
 }

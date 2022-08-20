@@ -1,0 +1,11 @@
+{
+	"$schema": "https://json.schemastore.org/web-manifest-combined.json",
+	"name": "Lights",
+	"short_name": "Lights",
+	"start_url": "/",
+	"display": "standalone",
+	"background_color": "#F0F4F8",
+	"description": "Control your LIFx Light Bulbs in your home",
+	"theme_color": "#2CB1BC",
+	"icons": [],
+}
