@@ -16,7 +16,12 @@ if (authToken != null) {
         const appScreen = document.getElementById("app");
         appScreen.style.display = "flex";
         const refreshedState = await refreshState();
-        console.log(refreshedState);
+        const groupElement = document.querySelector(".group-section").cloneNode(true) as HTMLElement;
+        for (const group of refreshedState) {
+            const groupElementClone = groupElement.cloneNode(true) as HTMLElement;
+            groupElementClone.querySelector(".group-switch [data-name]").innerText = group.name;
+        }
+        groupElement.remove();
     })();
 } else {
     // redirect to auth page

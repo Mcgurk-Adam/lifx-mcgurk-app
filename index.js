@@ -50,7 +50,7 @@ else {
 if (authToken != null) {
     window.history.pushState({}, "", "/");
     (function () { return __awaiter(_this, void 0, void 0, function () {
-        var appScreen, refreshedState;
+        var appScreen, refreshedState, groupElement, _i, refreshedState_1, group, groupElementClone;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -59,7 +59,13 @@ if (authToken != null) {
                     return [4, refreshState()];
                 case 1:
                     refreshedState = _a.sent();
-                    console.log(refreshedState);
+                    groupElement = document.querySelector(".group-section").cloneNode(true);
+                    for (_i = 0, refreshedState_1 = refreshedState; _i < refreshedState_1.length; _i++) {
+                        group = refreshedState_1[_i];
+                        groupElementClone = groupElement.cloneNode(true);
+                        groupElementClone.querySelector(".group-switch [data-name]").innerText = group.name;
+                    }
+                    groupElement.remove();
                     return [2];
             }
         });
