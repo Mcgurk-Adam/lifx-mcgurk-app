@@ -62,7 +62,6 @@ async function changeState(selector:string, powerStatus:"on"|"off") {
         "brightness": powerStatus === "on" ? 1.0 : 0.0,
         "duration": 0.0,
     }));
-    console.log(httpReturn);
 }
 
 async function refreshState(): Promise<Group[]> {

@@ -142,7 +142,6 @@ function changeState(selector, powerStatus) {
                         }))];
                 case 1:
                     httpReturn = _a.sent();
-                    console.log(httpReturn);
                     return [2];
             }
         });
