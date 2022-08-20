@@ -68,32 +68,35 @@ if (authToken != null) {
                         var groupCheckbox = groupElementClone.querySelector(".group-switch input[type=checkbox]");
                         groupCheckbox.checked = group.on;
                         groupCheckbox.onchange = function (e) { return __awaiter(_this, void 0, void 0, function () {
-                            var lightCheckboxes, e_1, lightCheckboxes;
+                            var lightCheckboxes, e_1;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
-                                        _a.trys.push([0, 2, 3, 4]);
-                                        groupCheckbox.setAttribute("disabled", "true");
-                                        return [4, changeState(buildSelector("group", group.id), groupCheckbox.checked ? "on" : "off")];
-                                    case 1:
-                                        _a.sent();
                                         lightCheckboxes = groupElementClone.querySelectorAll(".light-switch input[type=checkbox]");
+                                        _a.label = 1;
+                                    case 1:
+                                        _a.trys.push([1, 3, 4, 5]);
+                                        groupCheckbox.setAttribute("disabled", "true");
+                                        lightCheckboxes.forEach(function (checkbox) { return checkbox.setAttribute("disabled", "true"); });
+                                        return [4, changeState(buildSelector("group", group.id), groupCheckbox.checked ? "on" : "off")];
+                                    case 2:
+                                        _a.sent();
                                         lightCheckboxes.forEach(function (checkbox) {
                                             checkbox.checked = groupCheckbox.checked;
                                         });
-                                        return [3, 4];
-                                    case 2:
+                                        return [3, 5];
+                                    case 3:
                                         e_1 = _a.sent();
                                         groupCheckbox.checked = !groupCheckbox.checked;
-                                        lightCheckboxes = groupElementClone.querySelectorAll(".light-switch input[type=checkbox]");
                                         lightCheckboxes.forEach(function (checkbox) {
                                             checkbox.checked = groupCheckbox.checked;
                                         });
-                                        return [3, 4];
-                                    case 3:
+                                        return [3, 5];
+                                    case 4:
                                         groupCheckbox.removeAttribute("disabled");
+                                        lightCheckboxes.forEach(function (checkbox) { return checkbox.removeAttribute("disabled"); });
                                         return [7];
-                                    case 4: return [2];
+                                    case 5: return [2];
                                 }
                             });
                         }); };

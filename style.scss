@@ -70,9 +70,14 @@ input[type=checkbox].switch {
 	background-position-y: center;
 	background-image: url(/assets/icons/white-circle.svg);
 	background-position-x: var(--pill-offset);
+	opacity: 1;
 	&:checked {
 		background-color: #2CB1BC;
 		background-position-x: calc(100% - var(--pill-offset));
+	}
+	&[disabled=true] {
+		opacity: .7;
+		animation: pulse-opacity 1s infinite;
 	}
 }
 
@@ -106,5 +111,14 @@ input[type=checkbox].switch {
 		[data-name] {
 			font-size: 14px;
 		}
+	}
+}
+
+@keyframes pulse-opacity {
+	to {
+		opacity: .7;
+	}
+	from {
+		opacity: .3;
 	}
 }

@@ -25,21 +25,22 @@ if (authToken != null) {
             const groupCheckbox:HTMLInputElement = groupElementClone.querySelector(".group-switch input[type=checkbox]");
             groupCheckbox.checked = group.on;
             groupCheckbox.onchange = async (e) => {
+                const lightCheckboxes = groupElementClone.querySelectorAll(".light-switch input[type=checkbox]");
                 try {
                     groupCheckbox.setAttribute("disabled", "true");
+                    lightCheckboxes.forEach(checkbox => checkbox.setAttribute("disabled", "true"));
                     await changeState(buildSelector("group", group.id), groupCheckbox.checked ? "on" : "off");
-                    const lightCheckboxes = groupElementClone.querySelectorAll(".light-switch input[type=checkbox]");
                     lightCheckboxes.forEach((checkbox:HTMLInputElement) => {
                         checkbox.checked = groupCheckbox.checked;
                     });
                 } catch (e) {
                     groupCheckbox.checked = !groupCheckbox.checked;
-                    const lightCheckboxes = groupElementClone.querySelectorAll(".light-switch input[type=checkbox]");
                     lightCheckboxes.forEach((checkbox:HTMLInputElement) => {
                         checkbox.checked = groupCheckbox.checked;
                     });
                 } finally {
                     groupCheckbox.removeAttribute("disabled");
+                    lightCheckboxes.forEach(checkbox => checkbox.removeAttribute("disabled"));
                 }
             }
             const lightGroup = groupElementClone.querySelector(".light-group").cloneNode(true) as HTMLElement;
