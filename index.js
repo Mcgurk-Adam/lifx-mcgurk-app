@@ -36,6 +36,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 var urlSearchParams = new URLSearchParams(window.location.search);
+var refreshUiButton = document.getElementById("refreshUi");
+refreshUiButton.addEventListener("click", function () { return window.location.reload(); });
 var authToken = null;
 if (urlSearchParams.has("auth-token")) {
     authToken = urlSearchParams.get("auth-token");
@@ -137,13 +139,14 @@ if (authToken != null) {
                             _loop_2(light);
                         }
                         groupElementClone.querySelector(".light-group").remove();
-                        appScreen.insertAdjacentElement("beforeend", groupElementClone);
+                        document.getElementById("refreshUi").insertAdjacentElement("beforebegin", groupElementClone);
                     };
                     for (_i = 0, refreshedState_1 = refreshedState; _i < refreshedState_1.length; _i++) {
                         group = refreshedState_1[_i];
                         _loop_1(group);
                     }
                     document.querySelector(".group-section").remove();
+                    refreshUiButton.removeAttribute("disabled");
                     return [2];
             }
         });

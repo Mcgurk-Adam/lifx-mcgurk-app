@@ -78,6 +78,9 @@ input[type=checkbox].switch {
 	&[disabled=true] {
 		opacity: .7;
 		animation: pulse-opacity 1s infinite;
+		pointer-events: none;
+		touch-action: none;
+		cursor: not-allowed;
 	}
 }
 
@@ -111,6 +114,22 @@ input[type=checkbox].switch {
 		[data-name] {
 			font-size: 14px;
 		}
+	}
+}
+
+#refreshUi {
+	height: 35px;
+	width: 95%;
+	background-color: #2cb1bc;
+	color: #fff;
+	text-transform: uppercase;
+	border-radius: 4px;
+	font-weight: 500;
+	&:disabled {
+		opacity: .3;
+		pointer-events: none;
+		touch-action: none;
+		cursor: not-allowed;
 	}
 }
 

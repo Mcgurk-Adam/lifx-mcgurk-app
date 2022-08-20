@@ -1,4 +1,6 @@
 const urlSearchParams = new URLSearchParams(window.location.search);
+const refreshUiButton = document.getElementById("refreshUi");
+refreshUiButton.addEventListener("click", () => window.location.reload());
 let authToken:string|null = null;
 if (urlSearchParams.has("auth-token")) {
     authToken = urlSearchParams.get("auth-token");
@@ -63,9 +65,10 @@ if (authToken != null) {
                 groupElementClone.insertAdjacentElement("beforeend", lightGroupClone);
             }
             groupElementClone.querySelector(".light-group").remove();
-            appScreen.insertAdjacentElement("beforeend", groupElementClone);
+            document.getElementById("refreshUi").insertAdjacentElement("beforebegin", groupElementClone);
         }
         document.querySelector(".group-section").remove();
+        refreshUiButton.removeAttribute("disabled");
     })();
 } else {
     // redirect to auth page
