@@ -68,26 +68,70 @@ if (authToken != null) {
                         var groupCheckbox = groupElementClone.querySelector(".group-switch input[type=checkbox]");
                         groupCheckbox.checked = group.on;
                         groupCheckbox.onchange = function (e) { return __awaiter(_this, void 0, void 0, function () {
-                            var newPowerState;
+                            var lightCheckboxes, e_1, lightCheckboxes;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
-                                        newPowerState = groupCheckbox.checked ? "on" : "off";
-                                        return [4, changeState(buildSelector("group", group.id), newPowerState)];
+                                        _a.trys.push([0, 2, 3, 4]);
+                                        groupCheckbox.setAttribute("disabled", "true");
+                                        return [4, changeState(buildSelector("group", group.id), groupCheckbox.checked ? "on" : "off")];
                                     case 1:
                                         _a.sent();
-                                        return [2];
+                                        lightCheckboxes = groupElementClone.querySelectorAll(".light-switch input[type=checkbox]");
+                                        lightCheckboxes.forEach(function (checkbox) {
+                                            checkbox.checked = groupCheckbox.checked;
+                                        });
+                                        return [3, 4];
+                                    case 2:
+                                        e_1 = _a.sent();
+                                        groupCheckbox.checked = !groupCheckbox.checked;
+                                        lightCheckboxes = groupElementClone.querySelectorAll(".light-switch input[type=checkbox]");
+                                        lightCheckboxes.forEach(function (checkbox) {
+                                            checkbox.checked = groupCheckbox.checked;
+                                        });
+                                        return [3, 4];
+                                    case 3:
+                                        groupCheckbox.removeAttribute("disabled");
+                                        return [7];
+                                    case 4: return [2];
                                 }
                             });
                         }); };
                         var lightGroup = groupElementClone.querySelector(".light-group").cloneNode(true);
-                        for (var _b = 0, _c = group.lights; _b < _c.length; _b++) {
-                            var light = _c[_b];
+                        var _loop_2 = function (light) {
                             var lightGroupClone = lightGroup.cloneNode(true);
                             lightGroupClone.querySelector("label [data-name]").innerText = light.name;
                             var lightCheckbox = lightGroupClone.querySelector("label input[type=checkbox]");
                             lightCheckbox.checked = light.power === "on";
+                            lightCheckbox.onchange = function (e) { return __awaiter(_this, void 0, void 0, function () {
+                                var e_2;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            lightCheckbox.setAttribute("disabled", "true");
+                                            _a.label = 1;
+                                        case 1:
+                                            _a.trys.push([1, 3, 4, 5]);
+                                            return [4, changeState(buildSelector("light", light.id), lightCheckbox.checked ? "on" : "off")];
+                                        case 2:
+                                            _a.sent();
+                                            return [3, 5];
+                                        case 3:
+                                            e_2 = _a.sent();
+                                            lightCheckbox.checked = !lightCheckbox.checked;
+                                            return [3, 5];
+                                        case 4:
+                                            lightCheckbox.removeAttribute("disabled");
+                                            return [7];
+                                        case 5: return [2];
+                                    }
+                                });
+                            }); };
                             groupElementClone.insertAdjacentElement("beforeend", lightGroupClone);
+                        };
+                        for (var _b = 0, _c = group.lights; _b < _c.length; _b++) {
+                            var light = _c[_b];
+                            _loop_2(light);
                         }
                         groupElementClone.querySelector(".light-group").remove();
                         appScreen.insertAdjacentElement("beforeend", groupElementClone);
@@ -108,7 +152,7 @@ function http(path, method, data) {
     if (method === void 0) { method = "GET"; }
     if (data === void 0) { data = null; }
     return __awaiter(this, void 0, void 0, function () {
-        var authToken, baseUrl, fetchOptions, fetchRequest, e_1;
+        var authToken, baseUrl, fetchOptions, fetchRequest, e_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -131,7 +175,7 @@ function http(path, method, data) {
                     return [4, fetchRequest.json()];
                 case 3: return [2, _a.sent()];
                 case 4:
-                    e_1 = _a.sent();
+                    e_3 = _a.sent();
                     return [3, 5];
                 case 5: return [2];
             }
@@ -143,13 +187,11 @@ function changeState(selector, powerStatus) {
         var httpReturn;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    console.log(selector, powerStatus);
-                    return [4, http("/lights/".concat(selector, "/state"), "PUT", JSON.stringify({
-                            "power": powerStatus,
-                            "brightness": powerStatus === "on" ? 1.0 : 0.0,
-                            "duration": 0.0,
-                        }))];
+                case 0: return [4, http("/lights/".concat(selector, "/state"), "PUT", JSON.stringify({
+                        "power": powerStatus,
+                        "brightness": powerStatus === "on" ? 1.0 : 0.0,
+                        "duration": 0.0,
+                    }))];
                 case 1:
                     httpReturn = _a.sent();
                     return [2];
@@ -160,7 +202,7 @@ function changeState(selector, powerStatus) {
 function refreshState() {
     var _a;
     return __awaiter(this, void 0, void 0, function () {
-        var lights, lightGroups, _loop_2, _i, lights_1, light;
+        var lights, lightGroups, _loop_3, _i, lights_1, light;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0: return [4, http("/lights/all")];
@@ -168,7 +210,7 @@ function refreshState() {
                     lights = _b.sent();
                     document.getElementById("locationTitle").innerText = (_a = lights[0]) === null || _a === void 0 ? void 0 : _a.location.name;
                     lightGroups = [];
-                    _loop_2 = function (light) {
+                    _loop_3 = function (light) {
                         var lightObject = {
                             id: light.id,
                             uuid: light.uuid,
@@ -197,7 +239,7 @@ function refreshState() {
                     };
                     for (_i = 0, lights_1 = lights; _i < lights_1.length; _i++) {
                         light = lights_1[_i];
-                        _loop_2(light);
+                        _loop_3(light);
                     }
                     return [2, lightGroups];
             }

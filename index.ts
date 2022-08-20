@@ -25,8 +25,22 @@ if (authToken != null) {
             const groupCheckbox:HTMLInputElement = groupElementClone.querySelector(".group-switch input[type=checkbox]");
             groupCheckbox.checked = group.on;
             groupCheckbox.onchange = async (e) => {
-                const newPowerState = groupCheckbox.checked ? "on" : "off";
-                await changeState(buildSelector("group", group.id), newPowerState);
+                try {
+                    groupCheckbox.setAttribute("disabled", "true");
+                    await changeState(buildSelector("group", group.id), groupCheckbox.checked ? "on" : "off");
+                    const lightCheckboxes = groupElementClone.querySelectorAll(".light-switch input[type=checkbox]");
+                    lightCheckboxes.forEach((checkbox:HTMLInputElement) => {
+                        checkbox.checked = groupCheckbox.checked;
+                    });
+                } catch (e) {
+                    groupCheckbox.checked = !groupCheckbox.checked;
+                    const lightCheckboxes = groupElementClone.querySelectorAll(".light-switch input[type=checkbox]");
+                    lightCheckboxes.forEach((checkbox:HTMLInputElement) => {
+                        checkbox.checked = groupCheckbox.checked;
+                    });
+                } finally {
+                    groupCheckbox.removeAttribute("disabled");
+                }
             }
             const lightGroup = groupElementClone.querySelector(".light-group").cloneNode(true) as HTMLElement;
             for (const light of group.lights) {
@@ -35,6 +49,16 @@ if (authToken != null) {
                 lightGroupClone.querySelector("label [data-name]").innerText = light.name;
                 const lightCheckbox:HTMLInputElement = lightGroupClone.querySelector("label input[type=checkbox]");
                 lightCheckbox.checked = light.power === "on";
+                lightCheckbox.onchange = async (e) => {
+                    lightCheckbox.setAttribute("disabled", "true");
+                    try {
+                        await changeState(buildSelector("light", light.id), lightCheckbox.checked ? "on" : "off");
+                    } catch (e) {
+                        lightCheckbox.checked = !lightCheckbox.checked;
+                    } finally {
+                        lightCheckbox.removeAttribute("disabled");
+                    }
+                };
                 groupElementClone.insertAdjacentElement("beforeend", lightGroupClone);
             }
             groupElementClone.querySelector(".light-group").remove();
@@ -66,7 +90,6 @@ async function http(path: string, method:"GET"|"POST"|"PUT" = "GET", data:string
 }
 
 async function changeState(selector:string, powerStatus:"on"|"off") {
-    console.log(selector, powerStatus);
     const httpReturn = await http(`/lights/${selector}/state`, "PUT", JSON.stringify({
         "power": powerStatus,
         "brightness": powerStatus === "on" ? 1.0 : 0.0,
