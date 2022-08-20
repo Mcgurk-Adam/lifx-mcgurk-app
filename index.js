@@ -108,6 +108,7 @@ function http(path, method, data) {
                         method: method,
                         headers: {
                             "Authorization": "Bearer ".concat(authToken),
+                            "Content-Type": "application/json",
                         },
                         body: data,
                     };

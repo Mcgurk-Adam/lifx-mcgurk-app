@@ -43,6 +43,7 @@ async function http(path: string, method:"GET"|"POST"|"PUT" = "GET", data:string
         method: method,
         headers: {
             "Authorization": `Bearer ${authToken}`,
+            "Content-Type": "application/json",
         },
         body: data,
     };
