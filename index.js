@@ -63,9 +63,11 @@ if (authToken != null) {
                     for (_i = 0, refreshedState_1 = refreshedState; _i < refreshedState_1.length; _i++) {
                         group = refreshedState_1[_i];
                         groupElementClone = groupElement.cloneNode(true);
+                        groupElementClone.style.display = "block";
                         groupElementClone.querySelector(".group-switch [data-name]").innerText = group.name;
+                        appScreen.insertAdjacentElement("beforeend", groupElementClone);
                     }
-                    groupElement.remove();
+                    document.querySelector(".group-section").remove();
                     return [2];
             }
         });
@@ -86,7 +88,7 @@ function http(path, method, data) {
                     fetchOptions = {
                         method: method,
                         headers: {
-                            "Authorization": "Bearer " + authToken,
+                            "Authorization": "Bearer ".concat(authToken),
                         }
                     };
                     if (method === "GET") {
@@ -150,4 +152,7 @@ function refreshState() {
             }
         });
     });
+}
+function buildSelector(type, id) {
+    return type === "light" ? "id:".concat(id) : "group_id:".concat(id);
 }

@@ -19,9 +19,12 @@ if (authToken != null) {
         const groupElement = document.querySelector(".group-section").cloneNode(true) as HTMLElement;
         for (const group of refreshedState) {
             const groupElementClone = groupElement.cloneNode(true) as HTMLElement;
+            groupElementClone.style.display = "block";
+            // @ts-ignore
             groupElementClone.querySelector(".group-switch [data-name]").innerText = group.name;
+            appScreen.insertAdjacentElement("beforeend", groupElementClone);
         }
-        groupElement.remove();
+        document.querySelector(".group-section").remove();
     })();
 } else {
     // redirect to auth page
@@ -74,6 +77,10 @@ async function refreshState(): Promise<Group[]> {
         }
     }
     return lightGroups;
+}
+
+function buildSelector(type:"light"|"group", id:string):string {
+    return type === "light" ? `id:${id}` : `group_id:${id}`;
 }
 
 interface Light {
