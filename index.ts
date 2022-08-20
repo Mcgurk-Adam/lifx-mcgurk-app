@@ -28,6 +28,16 @@ if (authToken != null) {
                 const newPowerState = groupCheckbox.checked ? "on" : "off";
                 await changeState(buildSelector("group", group.id), newPowerState);
             }
+            const lightGroup = groupElementClone.querySelector(".light-group").cloneNode(true) as HTMLElement;
+            for (const light of group.lights) {
+                const lightGroupClone = lightGroup.cloneNode(true) as HTMLElement;
+                // @ts-ignore
+                lightGroupClone.querySelector("label [data-name]").innerText = light.name;
+                const lightCheckbox:HTMLInputElement = lightGroupClone.querySelector("label input[type=checkbox]");
+                lightCheckbox.checked = light.power === "on";
+                groupElementClone.insertAdjacentElement("beforeend", lightGroupClone);
+            }
+            groupElementClone.querySelector(".light-group").remove();
             appScreen.insertAdjacentElement("beforeend", groupElementClone);
         }
         document.querySelector(".group-section").remove();

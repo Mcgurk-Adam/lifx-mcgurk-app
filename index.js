@@ -80,6 +80,16 @@ if (authToken != null) {
                                 }
                             });
                         }); };
+                        var lightGroup = groupElementClone.querySelector(".light-group").cloneNode(true);
+                        for (var _b = 0, _c = group.lights; _b < _c.length; _b++) {
+                            var light = _c[_b];
+                            var lightGroupClone = lightGroup.cloneNode(true);
+                            lightGroupClone.querySelector("label [data-name]").innerText = light.name;
+                            var lightCheckbox = lightGroupClone.querySelector("label input[type=checkbox]");
+                            lightCheckbox.checked = light.power === "on";
+                            groupElementClone.insertAdjacentElement("beforeend", lightGroupClone);
+                        }
+                        groupElementClone.querySelector(".light-group").remove();
                         appScreen.insertAdjacentElement("beforeend", groupElementClone);
                     };
                     for (_i = 0, refreshedState_1 = refreshedState; _i < refreshedState_1.length; _i++) {
