@@ -50,7 +50,8 @@ else {
 if (authToken != null) {
     window.history.pushState({}, "", "/");
     (function () { return __awaiter(_this, void 0, void 0, function () {
-        var appScreen, refreshedState, groupElement, _i, refreshedState_1, group, groupElementClone;
+        var appScreen, refreshedState, groupElement, _loop_1, _i, refreshedState_1, group;
+        var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -60,12 +61,30 @@ if (authToken != null) {
                 case 1:
                     refreshedState = _a.sent();
                     groupElement = document.querySelector(".group-section").cloneNode(true);
-                    for (_i = 0, refreshedState_1 = refreshedState; _i < refreshedState_1.length; _i++) {
-                        group = refreshedState_1[_i];
-                        groupElementClone = groupElement.cloneNode(true);
+                    _loop_1 = function (group) {
+                        var groupElementClone = groupElement.cloneNode(true);
                         groupElementClone.style.display = "block";
                         groupElementClone.querySelector(".group-switch [data-name]").innerText = group.name;
+                        var groupCheckbox = groupElementClone.querySelector(".group-switch input[type=checkbox]");
+                        groupCheckbox.checked = group.on;
+                        groupCheckbox.onchange = function (e) { return __awaiter(_this, void 0, void 0, function () {
+                            var newPowerState;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0:
+                                        newPowerState = groupCheckbox.checked ? "on" : "off";
+                                        return [4, changeState(buildSelector("group", group.id), newPowerState)];
+                                    case 1:
+                                        _a.sent();
+                                        return [2];
+                                }
+                            });
+                        }); };
                         appScreen.insertAdjacentElement("beforeend", groupElementClone);
+                    };
+                    for (_i = 0, refreshedState_1 = refreshedState; _i < refreshedState_1.length; _i++) {
+                        group = refreshedState_1[_i];
+                        _loop_1(group);
                     }
                     document.querySelector(".group-section").remove();
                     return [2];
@@ -89,11 +108,9 @@ function http(path, method, data) {
                         method: method,
                         headers: {
                             "Authorization": "Bearer ".concat(authToken),
-                        }
+                        },
+                        body: data,
                     };
-                    if (method === "GET") {
-                        fetchOptions.body = data;
-                    }
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 4, , 5]);
@@ -110,10 +127,30 @@ function http(path, method, data) {
         });
     });
 }
+function changeState(selector, powerStatus) {
+    return __awaiter(this, void 0, void 0, function () {
+        var httpReturn;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    console.log(selector, powerStatus);
+                    return [4, http("/lights/".concat(selector, "/state"), "PUT", JSON.stringify({
+                            "power": powerStatus,
+                            "brightness": powerStatus === "on" ? 1.0 : 0.0,
+                            "duration": 0.0,
+                        }))];
+                case 1:
+                    httpReturn = _a.sent();
+                    console.log(httpReturn);
+                    return [2];
+            }
+        });
+    });
+}
 function refreshState() {
     var _a;
     return __awaiter(this, void 0, void 0, function () {
-        var lights, lightGroups, _loop_1, _i, lights_1, light;
+        var lights, lightGroups, _loop_2, _i, lights_1, light;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0: return [4, http("/lights/all")];
@@ -121,7 +158,7 @@ function refreshState() {
                     lights = _b.sent();
                     document.getElementById("locationTitle").innerText = (_a = lights[0]) === null || _a === void 0 ? void 0 : _a.location.name;
                     lightGroups = [];
-                    _loop_1 = function (light) {
+                    _loop_2 = function (light) {
                         var lightObject = {
                             id: light.id,
                             uuid: light.uuid,
@@ -137,16 +174,20 @@ function refreshState() {
                                 id: light.group.id,
                                 name: light.group.name,
                                 lights: [lightObject],
+                                on: light.power === "on",
                             };
                             lightGroups.push(group);
                         }
                         else {
+                            if (light.power === "on") {
+                                foundGroup.on = true;
+                            }
                             foundGroup.lights.push(lightObject);
                         }
                     };
                     for (_i = 0, lights_1 = lights; _i < lights_1.length; _i++) {
                         light = lights_1[_i];
-                        _loop_1(light);
+                        _loop_2(light);
                     }
                     return [2, lightGroups];
             }

@@ -22,6 +22,12 @@ if (authToken != null) {
             groupElementClone.style.display = "block";
             // @ts-ignore
             groupElementClone.querySelector(".group-switch [data-name]").innerText = group.name;
+            const groupCheckbox:HTMLInputElement = groupElementClone.querySelector(".group-switch input[type=checkbox]");
+            groupCheckbox.checked = group.on;
+            groupCheckbox.onchange = async (e) => {
+                const newPowerState = groupCheckbox.checked ? "on" : "off";
+                await changeState(buildSelector("group", group.id), newPowerState);
+            }
             appScreen.insertAdjacentElement("beforeend", groupElementClone);
         }
         document.querySelector(".group-section").remove();
@@ -30,24 +36,32 @@ if (authToken != null) {
     // redirect to auth page
 }
 
-async function http(path: string, method:"GET"|"POST" = "GET", data:string|null = null): Promise<any> {
+async function http(path: string, method:"GET"|"POST"|"PUT" = "GET", data:string|null = null): Promise<any> {
     const authToken = localStorage.getItem("auth-token");
     const baseUrl = "https://api.lifx.com/v1";
     const fetchOptions:RequestInit = {
         method: method,
         headers: {
             "Authorization": `Bearer ${authToken}`,
-        }
+        },
+        body: data,
     };
-    if (method === "GET") {
-        fetchOptions.body = data;
-    }
     try {
         const fetchRequest = await fetch(baseUrl + path, fetchOptions);
         return await fetchRequest.json();
     } catch (e) {
         // do something with an http error here
     }
+}
+
+async function changeState(selector:string, powerStatus:"on"|"off") {
+    console.log(selector, powerStatus);
+    const httpReturn = await http(`/lights/${selector}/state`, "PUT", JSON.stringify({
+        "power": powerStatus,
+        "brightness": powerStatus === "on" ? 1.0 : 0.0,
+        "duration": 0.0,
+    }));
+    console.log(httpReturn);
 }
 
 async function refreshState(): Promise<Group[]> {
@@ -70,9 +84,13 @@ async function refreshState(): Promise<Group[]> {
                 id: light.group.id,
                 name: light.group.name,
                 lights: [lightObject],
+                on: light.power === "on",
             };
             lightGroups.push(group);
         } else {
+            if (light.power === "on") {
+                foundGroup.on = true;
+            }
             foundGroup.lights.push(lightObject);
         }
     }
@@ -95,5 +113,6 @@ interface Light {
 interface Group {
     id: string;
     name: string;
+    on: boolean;
     lights: Light[];
 }
